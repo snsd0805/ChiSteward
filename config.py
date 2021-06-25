@@ -1,8 +1,4 @@
 import json
 
-class CONFIG():
-    @staticmethod
-    def get():
-        with open('config.json') as fp:
-            data = json.load(fp)
-            return data
+with open('config.json') as fp:
+    CONFIG = json.load(fp)

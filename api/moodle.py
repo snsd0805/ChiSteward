@@ -1,17 +1,25 @@
 import requests
 from bs4 import BeautifulSoup
-from config import CONFIG
+from api.tools import getUrlParam, findAll, find
 
 class Moodle():
     def __init__(self):
+        '''
+            Create a Moodle object to handle Session
+            self.session handle cookies
+        '''
         self.session = requests.Session()
-
-        # get login token
+        # get login token, token is used for self.login()
         response = self.session.get('https://moodle.ncnu.edu.tw/')
-        root = BeautifulSoup(response.text, 'html.parser')
-        self.loginToken = root.find('input', {'name': 'logintoken'}).get('value')
+        self.loginToken = find(response, 'input', {'name': 'logintoken'}).get('value')
 
     def login(self, username, password):
+        '''
+            For login to get Moodle Cookies
+            self.session handle cookies automatically
+
+            return True if Login Success
+        '''
         response = self.session.post(
             'https://moodle.ncnu.edu.tw/login/index.php?authldap_skipntlmsso=1',
             data={
@@ -23,32 +31,45 @@ class Moodle():
         # check whether login success
         # if it does, it return two 303 status code and redirected to Moodle main page
         if len(response.history) == 2:
+            self.sessionKey = getUrlParam(
+                find(response, 'a', {'data-title': 'logout,moodle'}).get('href'), 'sesskey'
+            )
+            print(self.sessionKey)
             return True
         else:
             return False
     
     def getCourses(self, semester):
+        '''
+            Get Courses link in this semester.
+            Return a list including {
+                'id',
+                'name'
+            }
+        '''
         response = self.session.get('https://moodle.ncnu.edu.tw/')
-        root = BeautifulSoup(response.text, 'html.parser')
-        courses = root.findAll('ul', {'class': 'dropdown-menu'})[1] \
-                      .findAll('li')
+        courses = findAll(response, 'ul', {'class': 'dropdown-menu'})[1]
         ans = []
         for course in courses:
             if course.text.split('-')[0]==semester:
                 ans.append({
+                    'id': getUrlParam(course.find('a').get('href'), 'id'),
                     'name': course.text,
-                    'link': course.find('a').get('href')
                 })
         return ans
-            
-
-
-moodle = Moodle()
-if moodle.login('學號', '密碼'):
-    print("登入成功")
-    courses = moodle.getCourses("1092")
-    for c in courses:
-        print(c)
-else:
-    print("登入失敗")
-
+    
+    def getUpcomingEvents(self):
+        '''
+            Get Upcomming Events
+        '''
+        response = self.session.get('https://moodle.ncnu.edu.tw/')
+        events = findAll(response, 'div', {'class': 'event'})
+        ans = []
+        for event in events:
+            datas = event.findAll('a')
+            ans.append({
+                'id': datas[0].get('data-event-id'),
+                'name': datas[0].text,
+                'time': datas[1].text
+            })
+        return ans
