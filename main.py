@@ -7,3 +7,4 @@ if moodle.status:
         print(c)
     for e in moodle.getUpcomingEvents():
         print(e)
+        print(moodle.getEvent(e['id']))

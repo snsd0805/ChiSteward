@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from api.tools import getUrlParam, findAll, find
+import json
 
 class Moodle():
     def __init__(self, username, password):
@@ -75,3 +76,27 @@ class Moodle():
                 'time': datas[1].text
             })
         return ans
+
+    def getEvent(self, eventId):
+        '''
+            取得單一 Event 的細節
+        '''
+        url = "https://moodle.ncnu.edu.tw/lib/ajax/service.php?sesskey={}&info=core_calendar_get_calendar_event_by_id"
+        data = [
+            {
+                "index": 0,
+                "methodname": "core_calendar_get_calendar_event_by_id",
+                "args": { "eventid": eventId}
+            }
+        ]
+        response = self.session.get(url.format(self.sessionKey), data=json.dumps(data))
+        response = json.loads(response.text)[0]['data']['event']
+        return {
+            'id': response['id'],
+            'name': response['name'],
+            'description': response['description'],
+            'course': {
+                'id': response['course']['id'],
+                'name': response['course']['fullname']
+            }
+        }
