@@ -3,15 +3,14 @@ from bs4 import BeautifulSoup
 from api.tools import getUrlParam, findAll, find
 
 class Moodle():
-    def __init__(self):
+    def __init__(self, username, password):
         '''
             Create a Moodle object to handle Session
             self.session handle cookies
         '''
         self.session = requests.Session()
-        # get login token, token is used for self.login()
-        response = self.session.get('https://moodle.ncnu.edu.tw/')
-        self.loginToken = find(response, 'input', {'name': 'logintoken'}).get('value')
+        self.status = self.login(username, password)
+        
 
     def login(self, username, password):
         '''
@@ -20,10 +19,14 @@ class Moodle():
 
             return True if Login Success
         '''
+        # get login token
+        response = self.session.get('https://moodle.ncnu.edu.tw/')
+        loginToken = find(response, 'input', {'name': 'logintoken'}).get('value')
+
         response = self.session.post(
             'https://moodle.ncnu.edu.tw/login/index.php?authldap_skipntlmsso=1',
             data={
-                'logintoken': self.loginToken,
+                'logintoken': loginToken,
                 'username': username,
                 'password': password
             }
@@ -34,7 +37,6 @@ class Moodle():
             self.sessionKey = getUrlParam(
                 find(response, 'a', {'data-title': 'logout,moodle'}).get('href'), 'sesskey'
             )
-            print(self.sessionKey)
             return True
         else:
             return False
