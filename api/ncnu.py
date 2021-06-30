@@ -66,3 +66,32 @@ class NCNU():
         else:
             return False
 
+    def getScoreSummary(self):
+        '''
+            取得各學期的學分數、平均、排名
+            return data 包含 semesters(list) & sum(dict) 兩部份
+
+            各個學期的細項（各項課程分數）需要在另外的 function 做請求
+        '''
+        url = "https://ccweb.ncnu.edu.tw/student/aspmaker_student_selected_semester_stat_viewlist.php"
+        response = self.session.get(url)
+
+        if response.status_code == 200:
+            histories = find(response, 'tbody').findAll('tr')
+
+            # 各學年度的資料(含總和)
+            semesterDatas = [{
+                'semester':     data[0].text.replace('\n',''),      # 學期
+                'select_num':   data[1].text.replace('\n',''),      # 選課數
+                'pass_Num':     data[2].text.replace('\n',''),      # 及格課程數
+                'pass_credit':  data[3].text.replace('\n',''),      # 及格學分數
+                'average':      data[4].text.replace('\n',''),      # 平均  
+                'rank':         data[5].text.replace('\n','')       # 班排名
+            } for data in (his.findAll('td')[2:] for his in histories)]
+
+            return {
+                'semesters': semesterDatas[:-1],
+                'sum': semesterDatas[-1]
+            }
+        else:
+            return None
