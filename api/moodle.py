@@ -44,8 +44,8 @@ class Moodle():
     
     def getCourses(self, semester):
         '''
-            Get Courses link in this semester.
-            Return a list including {
+            取得該學年的所有課程列表
+            Return {
                 'id',
                 'name'
             }
@@ -63,7 +63,8 @@ class Moodle():
     
     def getUpcomingEvents(self):
         '''
-            Get Upcomming Events
+            取得 Event 列表
+            僅包含 ID、大標題、時間
         '''
         response = self.session.get('https://moodle.ncnu.edu.tw/')
         events = findAll(response, 'div', {'class': 'event'})
@@ -80,6 +81,7 @@ class Moodle():
     def getEvent(self, eventId):
         '''
             取得單一 Event 的細節
+            額外取得 Description、課程資訊
         '''
         url = "https://moodle.ncnu.edu.tw/lib/ajax/service.php?sesskey={}&info=core_calendar_get_calendar_event_by_id"
         data = [
