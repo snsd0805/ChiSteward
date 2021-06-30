@@ -1,3 +1,4 @@
+import time
 import requests
 from bs4 import BeautifulSoup
 from api.tools import getUrlParam, findAll, find
@@ -22,8 +23,9 @@ class Moodle():
         '''
         # get login token
         response = self.session.get('https://moodle.ncnu.edu.tw/')
-        loginToken = find(response, 'input', {'name': 'logintoken'}).get('value')
+        loginToken = find(response, 'input', param={'name': 'logintoken'}).get('value')
 
+        # login request
         response = self.session.post(
             'https://moodle.ncnu.edu.tw/login/index.php?authldap_skipntlmsso=1',
             data={
@@ -36,7 +38,7 @@ class Moodle():
         # if it does, it return two 303 status code and redirected to Moodle main page
         if len(response.history) == 2:
             self.sessionKey = getUrlParam(
-                find(response, 'a', {'data-title': 'logout,moodle'}).get('href'), 'sesskey'
+                find(response, 'a', param={'data-title': 'logout,moodle'}).get('href'), 'sesskey'
             )
             return True
         else:
@@ -51,7 +53,7 @@ class Moodle():
             }
         '''
         response = self.session.get('https://moodle.ncnu.edu.tw/')
-        courses = findAll(response, 'ul', {'class': 'dropdown-menu'})[1]
+        courses = findAll(response, 'ul', param={'class': 'dropdown-menu'})[1]
         ans = []
         for course in courses:
             if course.text.split('-')[0]==semester:
@@ -67,7 +69,7 @@ class Moodle():
             僅包含 ID、大標題、時間
         '''
         response = self.session.get('https://moodle.ncnu.edu.tw/')
-        events = findAll(response, 'div', {'class': 'event'})
+        events = findAll(response, 'div', param={'class': 'event'})
         ans = []
         for event in events:
             datas = event.findAll('a')
@@ -102,3 +104,26 @@ class Moodle():
                 'name': response['course']['fullname']
             }
         }
+
+    def getWeekWorkInCourse(self, courseID):
+        '''
+            使用 CourseID 取得當週所公告的物件
+            回傳 型別、名稱、連結
+        '''
+        
+        url = "https://moodle.ncnu.edu.tw/course/view.php?id={}"
+        response = self.session.get(url.format(courseID))
+        # dateBlock = findAll(response, 'li', param={'class': 'section main clearfix'})[-2]
+        dateBlock = find(response, 'li', param={'class': 'section main clearfix current'})
+
+        if dateBlock:
+            links = dateBlock.findAll('li')
+
+            return [{
+                'name': " ".join( link.text.split(' ')[:-1] ),
+                'type': link.text.split(' ')[-1],
+                'link': link.find('a').get('href')
+            } for link in links]
+        else:
+            return None
+

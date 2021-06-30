@@ -8,3 +8,6 @@ if moodle.status:
     for e in moodle.getUpcomingEvents():
         print(e)
         print(moodle.getEvent(e['id']))
+    
+    for work in moodle.getWeekWorkInCourse('47562'):
+        print(work)
