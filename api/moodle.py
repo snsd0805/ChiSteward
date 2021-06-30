@@ -1,7 +1,7 @@
 import time
 import requests
 from bs4 import BeautifulSoup
-from api.tools import getUrlParam, findAll, find
+from api.tools import *
 import json
 
 class Moodle():
@@ -113,8 +113,8 @@ class Moodle():
         
         url = "https://moodle.ncnu.edu.tw/course/view.php?id={}"
         response = self.session.get(url.format(courseID))
-        # dateBlock = findAll(response, 'li', param={'class': 'section main clearfix'})[-2]
-        block = find(response, 'li', param={'class': 'section main clearfix current'})
+        block = findAll(response, 'li', param={'class': 'section main clearfix'})[-2]
+        # block = find(response, 'li', param={'class': 'section main clearfix current'})
 
         if block:
             links = block.findAll('li')
