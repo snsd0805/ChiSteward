@@ -114,10 +114,10 @@ class Moodle():
         url = "https://moodle.ncnu.edu.tw/course/view.php?id={}"
         response = self.session.get(url.format(courseID))
         # dateBlock = findAll(response, 'li', param={'class': 'section main clearfix'})[-2]
-        dateBlock = find(response, 'li', param={'class': 'section main clearfix current'})
+        block = find(response, 'li', param={'class': 'section main clearfix current'})
 
-        if dateBlock:
-            links = dateBlock.findAll('li')
+        if block:
+            links = block.findAll('li')
 
             return [{
                 'name': " ".join( link.text.split(' ')[:-1] ),
@@ -127,3 +127,17 @@ class Moodle():
         else:
             return None
 
+    def getAnnoInCourse(self, courseID):
+        '''
+            使用 CourseID 取得最新公告
+            block_news_items block
+        '''
+        url = "https://moodle.ncnu.edu.tw/course/view.php?id={}"
+        response = self.session.get(url.format(courseID))
+        block = find(response, 'div', param={'class': 'block_news_items block'})
+        
+        return [{
+            'id': getUrlParam(
+                anno.find('a').get('href'), 'd' ),
+            'title': anno.text
+        } for anno in block.findAll('div', 'info') ]
