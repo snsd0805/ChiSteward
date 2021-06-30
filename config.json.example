@@ -3,5 +3,9 @@
     "moodle": {
         "username": "學號",
         "password": "密碼"
+    },
+    "NCNU": {
+        "username": "學號",
+        "password": "教務系統密碼"
     }
 }
