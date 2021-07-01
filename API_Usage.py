@@ -89,5 +89,13 @@ if ncnu.status:
             print(log)
     else:
         print("沒有任何獎懲紀錄")
+    space()
+
+    # ===== Test 取得加選課程狀態 =====
+    logs = ncnu.getAddCourseLogs()
+    if logs:
+        for log in logs:
+            print(log)
+    space()
 else:
     print("NCNU 教務系統登入失敗")

@@ -153,3 +153,18 @@ class NCNU():
                 'count':    data[3],
                 'content':  data[4],
             } for data in (data.replace('"', '').split(',') for data in datas)]
+    
+    def getAddCourseLogs(self):
+        response = self.session.get('https://ccweb.ncnu.edu.tw/student/applyaddcourselist.php?export=csv')
+        datas = response.text.split('\r\n')[1:-1]
+        
+        if len(datas) == 2:
+            return None
+        else:
+            return [{
+                'id':           data[0],
+                'semester':     data[1],
+                'classname':    data[2]+data[3],
+                'class':        data[4],
+                'check':        data[5],
+            } for data in (data.replace('"', '').split(',') for data in datas)]
