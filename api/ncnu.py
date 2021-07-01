@@ -122,3 +122,19 @@ class NCNU():
             } for data in (score.findAll('td') for score in scores[1:])]
         else:
             return None
+    
+    def getAbsenceLog(self):
+        response = self.session.get("https://ccweb.ncnu.edu.tw/student/absencelist.php")
+        table = find(response, 'tbody')
+
+        if table:
+            logs = table.findAll('tr')
+            return [{
+                'id':           data[0].text.replace('\n', ''),
+                'semester':     data[1].text.replace('\n', ''),
+                'classname':    data[2].text.replace('\n', ''),
+                'date':         data[3].text.replace('\n', ''),
+                'time':         data[4].text.replace('\n', '')
+            } for data in (log.findAll('td') for log in logs)]
+        else:
+            return None

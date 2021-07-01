@@ -44,5 +44,12 @@ if ncnu.status:
     for i in scores:
         print(i)
     space()
+    absenceLogs = ncnu.getAbsenceLog()
+    if absenceLogs:
+        for log in absenceLogs:
+            print(log)
+    else:
+        print("沒有任何缺曠課記錄")
+    space()
 else:
     print("NCNU 教務系統登入失敗")
