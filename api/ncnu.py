@@ -7,6 +7,7 @@ class NCNU():
             initial 就登入
             根據 self.status 判斷成功與否
         '''
+        self.username = username    # 學號
         self.session = requests.Session()
         self.status = self.login(username, password)
     
@@ -87,11 +88,37 @@ class NCNU():
                 'pass_credit':  data[3].text.replace('\n',''),      # 及格學分數
                 'average':      data[4].text.replace('\n',''),      # 平均  
                 'rank':         data[5].text.replace('\n','')       # 班排名
-            } for data in (his.findAll('td')[2:] for his in histories)]
+            } for data in (his.findAll('td')[2:]
+                for his in histories)]
 
             return {
                 'semesters': semesterDatas[:-1],
                 'sum': semesterDatas[-1]
             }
+        else:
+            return None
+    
+    def getScore(self, semester):
+        '''
+            取得指定學期的各項成績
+        '''
+        url = "https://ccweb.ncnu.edu.tw/student/aspmaker_student_selected_semester_stat_viewview.php"
+        url += "?showdetail=aspmaker_student_selected_view&studentid={}&year={}"
+        response = self.session.get(url.format(self.username, semester))
+
+        if response.status_code == 200:
+            scores = find(response, 'div', param={'class': 'card ew-card ew-grid aspmaker_student_selected_view'}) \
+                    .findAll('tr')
+            return [{
+                'number':       data[1].text.replace('\n',''),          # 
+                'class':        data[2].text.replace('\n',''),
+                'name':         data[3].text.replace('\n',''),
+                'teacher':      data[4].text.replace('\n',''),
+                'time':         data[5].text.replace('\n',''),
+                'place':        data[6].text.replace('\n',''),
+                'credit':       data[7].text.replace('\n',''),
+                'score':        data[8].text.replace('\n',''),
+                'mandatory':    data[9].text.replace('\n','')
+            } for data in (score.findAll('td') for score in scores[1:])]
         else:
             return None

@@ -34,10 +34,15 @@ if ncnu.status:
         print("1092 課表已經儲存到 ./1092課表.pdf")
     else:
         print("無法存取 1092 課表")
-    
+    space()
     scores = ncnu.getScoreSummary()
     for c in scores['semesters']:
         print(c)
     print(scores['sum'])
+    space()
+    scores = ncnu.getScore('1092')
+    for i in scores:
+        print(i)
+    space()
 else:
     print("NCNU 教務系統登入失敗")
