@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from api.tools import *
 import json
 
-class Moodle():
+class MoodleAPI():
     def __init__(self, username, password):
         '''
             Create a Moodle object to handle Session

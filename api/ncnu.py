@@ -1,7 +1,7 @@
 import requests
 from api.tools import *
 
-class NCNU():
+class NcnuAPI():
     def __init__(self, username, password):
         '''
             initial 就登入

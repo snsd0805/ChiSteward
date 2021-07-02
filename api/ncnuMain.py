@@ -2,7 +2,7 @@ from api.tools import *
 import requests
 from bs4 import BeautifulSoup
 
-class NcnuMain():
+class NcnuMainAPI():
     def getAnno(self):
         response = requests.get('https://www.ncnu.edu.tw/ncnuweb/ann/tabs.aspx?homeType=ncnu&unit=ncnu')
         block = find(response, 'div', param={'id': 'annNews'})
