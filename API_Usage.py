@@ -111,5 +111,10 @@ eventReg = EventRegistry(CONFIG['NCNU']['username'], CONFIG['NCNU']['password'])
 if eventReg.status:
     print("登入成功")
     space()
+
+    # ===== Test 取得所有活動第一頁的列表
+    for event in eventReg.getEventsList():
+        print(event)
+    
 else:
     print("登入失敗")
