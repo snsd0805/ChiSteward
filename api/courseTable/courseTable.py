@@ -18,19 +18,16 @@ import requests
 import json
 
 
-class Course():
-    def __init__(self, data):
-        self.data = data
-    
-    def getTime(self):
-        number = 0
-        ans = []
-        for c in self.data['time']:
-            if c <= '9' and c >= '0':
-                number = c
-            else:
-                ans.append(number+c)
-        return ans
+
+def getTime(time):
+    number = 0
+    ans = []
+    for c in time:
+        if c <= '9' and c >= '0':
+            number = c
+        else:
+            ans.append(str(number)+c)
+    return ans
 
 class CourseTable():
     def __init__(self):
@@ -46,6 +43,7 @@ class CourseTable():
         self.courseData = json.loads(
             requests.get('https://raw.githubusercontent.com/snsd0805/NCNU_Course/master/%E6%AD%B7%E5%B9%B4%E8%AA%B2%E7%A8%8B%E8%B3%87%E6%96%99/1092_output.json').text
         )
+        
     
     def showTableStatus(self):
         '''
@@ -66,20 +64,11 @@ class CourseTable():
         '''
         for course in self.courseData:
             if course['number'] == courseID:
-                targetCourse = Course(course)
+                targetCourse = course
         
-        timeList = targetCourse.getTime()
-        print(timeList)
-        status = True
-        for time in timeList:
-            if time in self.table:
-                if self.table[time] != None:
-                    status = False
-                    break
-            else:
-                status = False
+        timeList = getTime(targetCourse['time'])
         
-        if status:
+        if self.conflict(targetCourse):
             for time in timeList:
                 self.table[time] = targetCourse
             return True
@@ -91,9 +80,40 @@ class CourseTable():
             移除課程
         '''
         for key, value in self.table.items():
-            if value.data['number'] == courseID:
+            if value['number'] == courseID:
                 self.table[key] = None
+    
+    def getDepartmentList(self):
+        ans = set()
+        for course in self.courseData:
+            ans.add(
+                course['department']
+            )
+        ans = [i for i in ans]
+        ans.sort()
         
+        return ans
+    
+    def conflict(self, course):
+        timeList = getTime(course['time'])
+        status = True
+        for time in timeList:
+            if time in self.table:
+                if self.table[time] != None:
+                    status = False
+                    break
+            else:
+                status = False
+        
+        return status
+    
+    def filter(self, department):
+        ans = []
+        for course in self.courseData:
+            if course['department'] == department:
+                if self.conflict(course):
+                    ans.append(course)
+        return ans
 
 table = CourseTable()
 table.showTableStatus()
@@ -105,3 +125,10 @@ print( table.add('240034') )
 table.showTableStatus()
 print( table.add('902048') )
 table.showTableStatus()
+
+departments = table.getDepartmentList()
+print(departments)
+
+courses = table.filter('21, 資工系')
+for course in courses:
+    print(course)
