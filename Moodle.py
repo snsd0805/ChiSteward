@@ -40,10 +40,10 @@ def createMoodleWin():
         #=====Leftframe 1.button ->show UpComingEvent 2.choose courses=======
         
         def showUpComingEvent(): #叫出未來事件
-            tmphtml='''<ul>'''
+            tmphtml=''''''
             for e in moodle.getUpcomingEvents():
-                tmphtml+='''<li> {} 時間:{}</li>'''.format(e.get("name"),e.get("time") )
-            tmphtml+='''</ul>'''
+                tmphtml+='''<br> {} <br>時間:{} <p>'''.format(e.get("name"),e.get("time") )
+            #tmphtml+='''</ul>'''
             htmlLb.set_html(tmphtml)
 
         upComingEventBtn=Button(leftFrame,text="未來事件",font="Helvetica 10",command= lambda:showUpComingEvent() )
