@@ -122,7 +122,7 @@ class MoodleAPI():
             return [{
                 'name': " ".join( link.text.split(' ')[:-1] ),
                 'type': link.text.split(' ')[-1],
-                'link': link.find('a').get('href')
+                'link': link.find('a').get('href') if link.find('a') != None else ""
             } for link in links]
         else:
             return None
