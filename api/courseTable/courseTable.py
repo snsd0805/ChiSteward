@@ -95,7 +95,10 @@ class CourseTable():
         return ans
     
     def conflict(self, course):
-        timeList = getTime(course['time'])
+        if course['time'] != None:
+            timeList = getTime(course['time'])
+        else:
+            return False
         status = True
         for time in timeList:
             if time in self.table:
@@ -107,28 +110,10 @@ class CourseTable():
         
         return status
     
-    def filter(self, department):
+    def courseFilter(self, department):
         ans = []
         for course in self.courseData:
             if course['department'] == department:
                 if self.conflict(course):
                     ans.append(course)
         return ans
-
-table = CourseTable()
-table.showTableStatus()
-print( table.add('240034') )
-table.showTableStatus()
-print( table.add('240057') )
-table.showTableStatus()
-print( table.add('240034') )
-table.showTableStatus()
-print( table.add('902048') )
-table.showTableStatus()
-
-departments = table.getDepartmentList()
-print(departments)
-
-courses = table.filter('21, 資工系')
-for course in courses:
-    print(course)
