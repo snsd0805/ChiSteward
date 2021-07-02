@@ -112,9 +112,15 @@ if eventReg.status:
     print("登入成功")
     space()
 
-    # ===== Test 取得所有活動第一頁的列表
+    # ===== Test 取得所有活動第一頁的列表 =====
     for event in eventReg.getEventsList():
         print(event)
-    
+    space()
+
+    # ===== Test 報名前準備 request body =====
+    requestBody = eventReg.signUpPrepare('3010')
+    for key, value in requestBody.items():
+        print("{}: {}".format(key, value))
+    space()
 else:
     print("登入失敗")

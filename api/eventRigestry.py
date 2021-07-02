@@ -66,3 +66,41 @@ class EventRegistry():
             'teacherEvent': data[8].text.replace('\n', ''),     # 申請為教師知能活動
         } for data in (event.findAll('td') for event in events[1:])]
 
+    def signUpPrepare(self, eventID):
+        '''
+            報名活動前的資料確認
+            return 報名系統預設給的資料，供使用者確認
+        '''
+        url = "https://ccweb.ncnu.edu.tw/SLLL/z7DDA4E0A5831540Dadd.asp?showmaster=z958B653E5831540D4E4B6D3B52D5660E7D30&fk_RowID={}"
+        response = self.session.get(url.format(eventID))
+        inputs = find(response, 'form').findAll('input')
+
+        values  = [inputData.get('value') for inputData in inputs]
+        names   = [inputData.get('name')  for inputData in inputs]
+
+        # 僅下列資料可更改
+        #   - x_iphone  校內分機
+        #   - x_phone   聯絡電話
+        #   - x_zemail  EMAIL
+        #   - x_remark  備註
+
+        ans = {}
+        for index in range(len(values)):
+            ans[names[index]] = values[index]
+        
+        return ans
+
+        # 前端接收後，僅可更改上述四項 value
+        # 更改後送到 signUp(requestBody) function 中送出請求
+    
+    def signUp(self, requestBody):
+        '''
+            目前禁止使用！！！
+        '''
+        url = "https://ccweb.ncnu.edu.tw/SLLL/z7DDA4E0A5831540Dadd.asp"
+        response = self.session.post(url, data=requestBody)
+
+        if response.status_code == 200:
+            return True
+        else:
+            return False
