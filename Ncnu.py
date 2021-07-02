@@ -1,11 +1,11 @@
 from tkinter import *
-from api.ncnu import NCNU
+from api.ncnu import NcnuAPI
 from config import CONFIG
 from tkinter import messagebox
 from tkhtmlview import HTMLLabel
 
 def createNcnuWin():
-    ncnu = NCNU(CONFIG['NCNU']['username'], CONFIG['NCNU']['password'])
+    ncnu = NcnuAPI(CONFIG['NCNU']['username'], CONFIG['NCNU']['password'])
     if ncnu.status:
         def dlCurriculum(sem):
             if ncnu.getCourseTable(sem):
