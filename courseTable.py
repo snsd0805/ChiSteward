@@ -47,6 +47,11 @@ class Choose():
                         courseTable.table[str(j+1) + tmp[i]]['name']
                     )
                     table[18 + (13*j+i)].removeBtn.grid()
+                    table[18 + (13*j+i)].id = courseTable.table[str(j+1) + tmp[i]]['number']
+                else:
+                    table[18 + (13*j+i)].classname.config(text="")
+                    table[18 + (13*j+i)].removeBtn.grid_forget()
+                    table[18 + (13*j+i)].id = None
 
     def insert(self,LIST):
         self.listbox.insert(END,*LIST)
@@ -64,8 +69,9 @@ class Space():
     def __init__(self, root, name=None):
         self.frame = Frame(root)
         self.classname = Label(self.frame, font="10", width="10", text=name)
-        self.removeBtn = Button(self.frame, font="10", text="刪")
+        self.removeBtn = Button(self.frame, font="10", text="刪", command=self.removeCourse)
         self.classname.config(relief=RIDGE)
+        self.id = None
 
     def grid(self,Row,Column):
         if Row==5:
@@ -74,6 +80,12 @@ class Space():
         self.classname.grid(row=0,column=0)
         self.removeBtn.grid(row=0,column=1)
         self.removeBtn.grid_forget()
+    
+    def removeCourse(self):
+        # print(self.id)
+        courseTable.remove(self.id)
+        box[0].update()
+        # courseTable.showTableStatus()
         
 root = Tk()
 root.geometry('800x600')
@@ -118,7 +130,6 @@ for j in range(5):
         table.append(Space(root))
         table[k].grid(i+1,j+3)
         k+=1
-print(len(table))
     
     
 

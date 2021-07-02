@@ -79,9 +79,10 @@ class CourseTable():
         '''
             移除課程
         '''
-        for key, value in self.table.items():
-            if value['number'] == courseID:
-                self.table[key] = None
+        for i in self.table:
+            if self.table[i]:
+                if self.table[i]['number'] == courseID:
+                    self.table[i] = None
     
     def getDepartmentList(self):
         ans = set()
