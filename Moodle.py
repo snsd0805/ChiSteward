@@ -1,5 +1,5 @@
 from tkinter import *
-from api.moodle import Moodle
+from api.moodle import MoodleAPI
 from config import CONFIG
 from tkhtmlview import HTMLLabel
 
@@ -14,7 +14,7 @@ def getIdAndName(course):
     
 
 def createMoodleWin():
-    moodle = Moodle(CONFIG['moodle']['username'], CONFIG['moodle']['password'])
+    moodle = MoodleAPI(CONFIG['moodle']['username'], CONFIG['moodle']['password'])
     
     if moodle.status:
          # ===== 取得課程ID與名稱 =====

@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from api.tools import *
 import json
 
-class Moodle():
+class MoodleAPI():
     def __init__(self, username, password):
         '''
             Create a Moodle object to handle Session
@@ -122,7 +122,7 @@ class Moodle():
             return [{
                 'name': " ".join( link.text.split(' ')[:-1] ),
                 'type': link.text.split(' ')[-1],
-                'link': link.find('a').get('href')
+                'link': link.find('a').get('href') if link.find('a') != None else ""
             } for link in links]
         else:
             return None

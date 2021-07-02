@@ -1,7 +1,8 @@
 from config import CONFIG
-from api.moodle import Moodle
-from api.ncnuMain import NcnuMain
-from api.ncnu import NCNU
+from api.moodle import MoodleAPI
+from api.ncnuMain import NcnuMainAPI
+from api.ncnu import NcnuAPI
+from api.eventRigestry import EventRegistry
 
 def space():
     print("\n" + "="*20 + "\n")
@@ -9,7 +10,7 @@ def space():
 # =================== TEST Moodle API ==========================
 
 # ===== Test 登入 =====
-moodle = Moodle(CONFIG['moodle']['username'], CONFIG['moodle']['password'])
+moodle = MoodleAPI(CONFIG['moodle']['username'], CONFIG['moodle']['password'])
 if moodle.status:
 
     # ===== Test 取得該學期課程資料 =====
@@ -40,7 +41,7 @@ else:
 # =================== Test 暨大官網 API ==========================
 
 # ===== Test 取得暨大官網最新消息 =====
-main = NcnuMain()
+main = NcnuMainAPI()
 for anno in main.getAnno():
     print(anno)
 space()
@@ -50,7 +51,7 @@ space()
 # =================== Test 暨大教務系統 API ==========================
 
 # ===== Test 登入 =====
-ncnu = NCNU(CONFIG['NCNU']['username'], CONFIG['NCNU']['password'])
+ncnu = NcnuAPI(CONFIG['NCNU']['username'], CONFIG['NCNU']['password'])
 if ncnu.status:
 
     # ===== Test 下載課表 =====
@@ -99,3 +100,27 @@ if ncnu.status:
     space()
 else:
     print("NCNU 教務系統登入失敗")
+
+
+
+
+# =================== Test 暨大活動報名系統 API ==========================
+
+# ===== Test 登入 =====
+eventReg = EventRegistry(CONFIG['NCNU']['username'], CONFIG['NCNU']['password'])
+if eventReg.status:
+    print("登入成功")
+    space()
+
+    # ===== Test 取得所有活動第一頁的列表 =====
+    for event in eventReg.getEventsList():
+        print(event)
+    space()
+
+    # ===== Test 報名前準備 request body =====
+    requestBody = eventReg.signUpPrepare('3010')
+    for key, value in requestBody.items():
+        print("{}: {}".format(key, value))
+    space()
+else:
+    print("登入失敗")
