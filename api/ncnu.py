@@ -122,3 +122,49 @@ class NCNU():
             } for data in (score.findAll('td') for score in scores[1:])]
         else:
             return None
+    
+    def getAbsenceLogs(self):
+        response = self.session.get("https://ccweb.ncnu.edu.tw/student/absencelist.php")
+        table = find(response, 'tbody')
+
+        if table:
+            logs = table.findAll('tr')
+            return [{
+                'id':           data[0].text.replace('\n', ''),
+                'semester':     data[1].text.replace('\n', ''),
+                'classname':    data[2].text.replace('\n', ''),
+                'date':         data[3].text.replace('\n', ''),
+                'time':         data[4].text.replace('\n', '')
+            } for data in (log.findAll('td') for log in logs)]
+        else:
+            return None
+    
+    def getAwardLogs(self):
+        response = self.session.get('https://ccweb.ncnu.edu.tw/student/aspmaker_student_merit_viewlist.php?export=csv')
+        datas = response.text.split('\r\n')[1:-1]
+        
+        if len(datas) == 2:
+            return None
+        else:  
+            return [{
+                'id':       data[0],
+                'semester': data[1],
+                'award':    data[2],
+                'count':    data[3],
+                'content':  data[4],
+            } for data in (data.replace('"', '').split(',') for data in datas)]
+    
+    def getAddCourseLogs(self):
+        response = self.session.get('https://ccweb.ncnu.edu.tw/student/applyaddcourselist.php?export=csv')
+        datas = response.text.split('\r\n')[1:-1]
+        
+        if len(datas) == 2:
+            return None
+        else:
+            return [{
+                'id':           data[0],
+                'semester':     data[1],
+                'classname':    data[2]+data[3],
+                'class':        data[4],
+                'check':        data[5],
+            } for data in (data.replace('"', '').split(',') for data in datas)]
