@@ -8,7 +8,8 @@ def createNcnuMainWin():
     win.geometry("600x600")
     main = NcnuMain()
     Link='''<span style="background-color:#ffcccc"><ul>'''
-
+    textLb=Label(win,text="暨大校園最新資訊",font="Helvetica 20",bg="#ffcccc")
+    
     for anno in main.getAnno():
         Link+='''<li> <a href={}> {}</a> </li>'''.format(anno.get("link"),anno.get("title") )
         
@@ -17,6 +18,7 @@ def createNcnuMainWin():
     sb=Scrollbar(win)
     htmlLable=HTMLLabel(win,html=Link)
     htmlLable.configure(yscrollcommand=sb.set)
+    textLb.pack(fill="x")
 
     sb.pack(side=RIGHT,fill="y")
     htmlLable.pack(fill="both",expand=True)
