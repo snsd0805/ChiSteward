@@ -34,6 +34,10 @@ class Course():
 
 class CourseTable():
     def __init__(self):
+        '''
+            初始化課表
+            取得課堂資料
+        '''
         self.table = {}
         for i in range(1, 6):
             for j in "abcdzefghijklm":
@@ -44,6 +48,9 @@ class CourseTable():
         )
     
     def showTableStatus(self):
+        '''
+            For debug
+        '''
         for j in "abcdzefghijklm":
             for i in range(1, 6):
                 if self.table[str(i)+j] != None:
@@ -53,6 +60,10 @@ class CourseTable():
             print()
     
     def add(self, courseID):
+        '''
+            使用 course ID 新增課程到課表
+            若課程時間不符或者該時間已經有了則新增失敗
+        '''
         for course in self.courseData:
             if course['number'] == courseID:
                 targetCourse = Course(course)
@@ -76,6 +87,9 @@ class CourseTable():
             return False
     
     def remove(self, courseID):
+        '''
+            移除課程
+        '''
         for key, value in self.table.items():
             if value.data['number'] == courseID:
                 self.table[key] = None
