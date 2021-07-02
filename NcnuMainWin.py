@@ -1,12 +1,12 @@
 from tkinter import *
 from tkhtmlview import HTMLLabel
-from api.ncnuMain import NcnuMain
+from api.ncnuMain import NcnuMainAPI
 
 def createNcnuMainWin():
     win=Tk()
     win.title("暨大官網最新資訊!")
     win.geometry("600x600")
-    main = NcnuMain()
+    main = NcnuMainAPI()
     Link='''<span style="background-color:#ffcccc"><ul>'''
     textLb=Label(win,text="暨大校園最新資訊",font="Helvetica 20",bg="#ffcccc")
     
