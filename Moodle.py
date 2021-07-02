@@ -1,11 +1,8 @@
 from tkinter import *
+from api.moodle import Moodle
+from config import CONFIG
+from tkhtmlview import HTMLLabel
 
-c=[{'id': '47552', 'name': '1092-210021 組合數學 '}, {'id': '47553', 'name': '1092-210022 資料結構與演算法(二) '}, {'id': '47555', 'name': '1092-210026 線性代數 '}, {'id': '47562', 'name': '1092-210111 機率 '}, {'id': '47620', 'name': '1092-219152 Python網頁擷取程式設計 '}, {'id': '48261', 'name': '1092-902044h 體育:高爾夫球 '}, {'id': '48275', 'name': '1092-902047c 體育:網球 '}, {'id': '48477', 'name': '1092-985216 資工系服務學習(下) '}, {'id': '48604', 'name': '1092-994003 綠色能源 '}, {'id': '48606', 'name': '1092-994010 東南亞教育制度 '}]
-
-def itemSelected(event):
-    obj = event.widget
-    index = obj.curselection()
-    
 def getIdAndName(course):
     coursesId=[]
     courseName=[]
@@ -14,31 +11,69 @@ def getIdAndName(course):
         tmp=i.get("name").split(" ")
         courseName.append(tmp[1])
     return coursesId ,courseName   
-
-def createMoodleWin(courses,upComingEvent):
-    win=Tk()
-
-    leftFrame=Frame(win)
-    rightFrame=Frame(win,bg="red")
-    leftFrame.pack(fill=BOTH)
-    rightFrame.pack(fill=BOTH)
     
 
-    coursesId,coursesName=getIdAndName(c)
+def createMoodleWin():
+    moodle = Moodle(CONFIG['moodle']['username'], CONFIG['moodle']['password'])
+    
+    if moodle.status:
+         # ===== 取得課程ID與名稱 =====
+        c = moodle.getCourses("1092")
+        coursesId,coursesName=getIdAndName(c)
+       
+         #for e in moodle.getUpcomingEvents()  
+        
+        win=Tk()
 
-    #=====leftframe 1.button ->show UpComingEvent 2.choose courses=======
-    upComingEventBtn=Button(leftFrame,text="未來事件",font="Helvetica 20")
-    coursesListBox=Listbox(leftFrame)
-    mylb=Label(leftFrame,text="我的課程",font="Helvetica 15")
+        rightFrame=Frame(win,bg="red")
+        leftFrame=Frame(win)
+        #===== 右框 初始化 用html去印出所有資料=====
+        htmlLb=HTMLLabel(rightFrame,html="")
+        htmlScrollbar=Scrollbar(rightFrame)
+        htmlLb.configure(yscrollcommand=htmlScrollbar.set)
+                   
+        htmlScrollbar.pack(fill=Y,side=RIGHT)
+        htmlLb.pack()
+    
+        leftFrame.pack(fill=BOTH,side=LEFT)
+        rightFrame.pack(fill=BOTH)
+        #=====Leftframe 1.button ->show UpComingEvent 2.choose courses=======
+        
+        def showUpComingEvent(): #叫出未來事件
+            tmphtml='''<ul>'''
+            for e in moodle.getUpcomingEvents():
+                tmphtml+='''<li> {} 時間:{}</li>'''.format(e.get("name"),e.get("time") )
+            tmphtml+='''</ul>'''
+            htmlLb.set_html(tmphtml)
 
-    coursesListBox.insert(END,*coursesName)
-    upComingEventBtn.pack(fill=BOTH,pady=10)
-    mylb.pack(fill=X)
-    coursesListBox.pack(fill=BOTH)
+        upComingEventBtn=Button(leftFrame,text="未來事件",font="Helvetica 10",command= lambda:showUpComingEvent() )
+        coursesListBox=Listbox(leftFrame)
+        mylb=Label(leftFrame,text="我的課程",font="Helvetica 15")
+        coursesListBox.insert(END,*coursesName)
+        
+        mylb.pack(fill=X)
+        coursesListBox.pack(fill=BOTH)
+        upComingEventBtn.pack(fill=BOTH,pady=10)
+        
+        #=======rightframe ->show everything which I click======
+        def itemSelected(event):
+            obj = event.widget
+            Index = obj.curselection()
+            tmpId=coursesId[coursesName.index(str(obj.get(Index)))]
+            Html='''<h3>本周作業</h3><ol>'''
+            for work in moodle.getWeekWorkInCourse(str(tmpId)):
+                Html+='''<li> <a href={}> {}</a> </li>'''.format(work.get("link"),work.get("name") )
+            Html+='''</ol><h3>最新公告</h3><ol>'''
+            for anno in moodle.getAnnoInCourse(str(tmpId)):
+                Html+='''<li>{}</li>'''.format(anno.get("title"))
+            Html+='''</ol>'''    
+            htmlLb.set_html(Html)
+            
+        coursesListBox.bind("<<ListboxSelect>>", itemSelected)
 
-    #=======rightframe show everything======
+        win.mainloop()
 
+    else:
+        print("Moodle 登入失敗")
 
-    win.mainloop()
-
-createMoodleWin(1,1)
+createMoodleWin()
