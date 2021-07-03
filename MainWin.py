@@ -4,6 +4,7 @@ from Moodle import createMoodleWin as moodleWin
 from Ncnu import createNcnuWin as ncnuWin 
 from NcnuMainWin import createNcnuMainWin as ncnuMainWin
 from courseTable import callTable
+from rigestryWin import createRigestryWin as rigestryWin
 
 def createMainWin(win,ncnu,moodle):
     '''
@@ -24,16 +25,19 @@ def createMainWin(win,ncnu,moodle):
     createNcnuMainWin=Button(win,text="暨大官網",font="Helvetica 30",bg="#ffcccc",fg="white",relief=GROOVE)
     createNcnuWin=Button(win,text="暨大教務系統",font="Helvetica 30",bg="#df99ff",fg="white",relief=GROOVE)
     createTable=Button(win,text="自己課表自己排",font="Helvetica 30",bg="blue",fg="white",relief=GROOVE,command=lambda:callTable())
+    createRigestryWin=Button(win,text="查詢活動報名資料",font="Helvetica 30",bg="black",fg="white",relief=GROOVE)
 
     createMoodleWin.config(command=lambda:moodleWin(moodle) )
     createNcnuMainWin.config(command=lambda:ncnuMainWin() )
     createNcnuWin.config(command=lambda:ncnuWin(ncnu) )
+    createRigestryWin.config(command=lambda:rigestryWin())
 
     
     createMoodleWin.pack(fill="x")
     createNcnuMainWin.pack(fill="x")
     createNcnuWin.pack(fill="x")
     createTable.pack(fill="x")
+    createRigestryWin.pack(fill="x")
 
     win.mainloop()
 
