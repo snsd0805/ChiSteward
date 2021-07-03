@@ -19,8 +19,5 @@ def main():
     else:
         loginWin=Tk()
         loginwin(loginWin)
-    
-        
-
 
 main()    
