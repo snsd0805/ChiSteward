@@ -45,6 +45,10 @@ def createNcnuWin(ncnu):
         def itemSelected(event):
             obj = event.widget
             Index = obj.curselection()
+            ht='''<h5>讀取中</h5>'''
+            htmlLb.set_html(ht)
+            win.update()
+            
             
             Html=''''''
             if str( obj.get(Index) ) == options[0]:
