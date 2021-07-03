@@ -13,9 +13,7 @@ def getIdAndName(course):
     return coursesId ,courseName   
     
 
-def createMoodleWin():
-    moodle = MoodleAPI(CONFIG['moodle']['username'], CONFIG['moodle']['password'])
-    
+def createMoodleWin(moodle):
     if moodle.status:
          # ===== 取得課程ID與名稱 =====
         c = moodle.getCourses("1092")
@@ -75,5 +73,3 @@ def createMoodleWin():
 
     else:
         print("Moodle 登入失敗")
-
-createMoodleWin()
