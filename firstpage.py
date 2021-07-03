@@ -53,8 +53,13 @@ def loginwin(login):
     ncnupw_lb=Label(frame4,text="教務系統密碼",font="Helvetica 12",bg="lightgreen")
     
     show_password=Button( frame3,text="透視moodle密碼")
+    show_ncnupw=Button( frame3,text="透視教務系統密碼")
+
     show_password.bind( '<Button-1>',lambda event:enter_password.config(show=""))
     show_password.bind( '<ButtonRelease-1>',lambda event : enter_password.config(show="*") )
+
+    show_ncnupw.bind( '<Button-1>',lambda event:enter_ncnupw.config(show=""))
+    show_ncnupw.bind( '<ButtonRelease-1>',lambda event : enter_ncnupw.config(show="*") )
 
 
     #===== 輸入帳密=====
@@ -94,6 +99,7 @@ def loginwin(login):
     enter_ncnupw.pack()
     
     show_password.pack(side="left",pady=10,padx=10)
+    show_ncnupw.pack(side="left",pady=10,padx=10)
     login_btn.pack(side="left",pady=10)
 
     login.mainloop()
