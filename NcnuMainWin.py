@@ -25,4 +25,3 @@ def createNcnuMainWin():
 
     win.mainloop()
 
-createNcnuMainWin()    
