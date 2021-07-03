@@ -12,17 +12,13 @@ def getIdAndName(course):
         courseName.append(tmp[1])
     return coursesId ,courseName   
     
+        
 
 def createMoodleWin(moodle):
     if moodle.status:
          # ===== 取得課程ID與名稱 =====
-        c = moodle.getCourses("1092")
-        coursesId,coursesName=getIdAndName(c)
-       
-         #for e in moodle.getUpcomingEvents()  
-        
         win=Tk()
-
+        
         rightFrame=Frame(win,bg="red")
         leftFrame=Frame(win)
         #===== 右框 初始化 用html去印出所有資料=====
@@ -35,6 +31,7 @@ def createMoodleWin(moodle):
     
         leftFrame.pack(fill=BOTH,side=LEFT)
         rightFrame.pack(fill=BOTH)
+
         #=====Leftframe 1.button ->show UpComingEvent 2.choose courses=======
         
         def showUpComingEvent(): #叫出未來事件
@@ -47,7 +44,6 @@ def createMoodleWin(moodle):
         upComingEventBtn=Button(leftFrame,text="未來事件",font="Helvetica 10",command= lambda:showUpComingEvent() )
         coursesListBox=Listbox(leftFrame)
         mylb=Label(leftFrame,text="我的課程",font="Helvetica 15")
-        coursesListBox.insert(END,*coursesName)
         
         mylb.pack(fill=X)
         coursesListBox.pack(fill=BOTH)
@@ -67,9 +63,19 @@ def createMoodleWin(moodle):
             Html+='''</ol>'''    
             htmlLb.set_html(Html)
             
+        coursesName=[]
+        coursesListBox.insert(END,*coursesName)
+        
+        win.update()
+        
+        coursesId,coursesName=getIdAndName(moodle.getCourses("1092"))    
+        coursesListBox.insert(END,*coursesName)
+        print(coursesName)
         coursesListBox.bind("<<ListboxSelect>>", itemSelected)
-
         win.mainloop()
+        
+
+        
 
     else:
         print("Moodle 登入失敗")
