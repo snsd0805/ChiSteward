@@ -24,17 +24,16 @@ if moodle.status:
     space()
 
     # ===== Test 取得課程在當週發布的物件 （ 文件、功課、BBB連結... 等）
-    for work in moodle.getWeekWorkInCourse('47562'):
+    for work in moodle.getWeekWorkInCourse('47552'):
         print(work)
     space()
 
     # ===== TEST 取得該課程的最新公告
-    for anno in moodle.getAnnoInCourse('47555'):
+    for anno in moodle.getAnnoInCourse('47552'):
         print(anno)
     space()
 else:
     print("Moodle 登入失敗")
-
 
 
 
