@@ -67,16 +67,17 @@ class Choose():
 
 class Space():
     def __init__(self, root, name=None):
-        self.frame = Frame(root)
-        self.classname = Label(self.frame, font="10", width="10", text=name)
-        self.removeBtn = Button(self.frame, font="10", text="刪", command=self.removeCourse)
-        self.classname.config(relief=RIDGE)
+        self.frame = Frame(root,relief=RIDGE,bd=1)
+        self.classname = Label(self.frame, font=("Curier New",10),padx=10, text=name,justify="right")
+        self.removeBtn = Button(self.frame, font=("Curier New",10), text="刪", command=self.removeCourse)
+        #self.frame.config(relief=RIDGE)
         self.id = None
 
     def grid(self,Row,Column):
         if Row==5:
+            self.frame.config(bg="green")
             self.classname.config(bg="green")
-        self.frame.grid(row=Row,column=Column,padx=20)
+        self.frame.grid(row=Row,column=Column,padx=20,sticky="w"+"e")
         self.classname.grid(row=0,column=0)
         self.removeBtn.grid(row=0,column=1)
         self.removeBtn.grid_forget()
@@ -97,13 +98,13 @@ box.append(Choose(root,name="科系",typeS='department'))
 departments = courseTable.getDepartmentList()
 box[0].insert(departments)
 box[0].listbox.select_set(0)
-box[0].grid(0,0,5)
+box[0].grid(0,0,7)
 
 box.append(Choose(root,name="課程",typeS='courses'))
 courses = courseTable.courseFilter("21, 資工系")
 
 box[1].insert(["{} {}({})".format(course['number'], course['name'], course['time']) for course in courses])
-box[1].grid(5,0,5)
+box[1].grid(7,0,6)
 
 
 table = []
