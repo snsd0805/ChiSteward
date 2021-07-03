@@ -8,16 +8,18 @@ from NcnuMainWin import *
 from api.moodle import MoodleAPI
 from api.ncnu import NcnuAPI
 
-def main():
-    win=Tk()
-    firstWin(win)
+win=Tk()
+firstWin(win)
+def checkJson():
     moodle = MoodleAPI(CONFIG['moodle']['username'], CONFIG['moodle']['password'])
     ncnu = NcnuAPI(CONFIG['NCNU']['username'], CONFIG['NCNU']['password'])
     if  moodle.status and ncnu.status:
         mainWin=Tk()
         createMainWin(mainWin,ncnu,moodle)
     else:
-        loginWin=Tk()
-        loginwin(loginWin)
+        mainWin=Tk()
+        loginwin(mainWin)
 
-main()    
+win.protocol("WM_DELETE_WINDOW",checkJson())
+    
+    
