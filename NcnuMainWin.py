@@ -17,6 +17,10 @@ def createNcnuMainWin():
     htmlLable.pack(fill="both",expand=True)
     win.update()
     #=====爬=====
+    ht='''<span style="background-color:#ffcccc"><h5>讀取中</h5></span>'''
+    htmlLable.set_html(ht)
+    win.update()
+            
     main = NcnuMainAPI()
     Link='''<span style="background-color:#ffcccc"><ul>'''
     for anno in main.getAnno():
