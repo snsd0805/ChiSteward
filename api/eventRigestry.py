@@ -44,12 +44,8 @@ class EventRegistry():
         '''
         url = "https://ccweb.ncnu.edu.tw/SLLL/z6D3B52D553CA5831540D8CC7659967E58A62list.asp"
         response = self.session.get(url)
-
-        with open('test.html') as fp:
-            response = fp.read()
         
-        root = BeautifulSoup(response, 'html.parser')
-        events = root.find('table').findAll('tr')
+        events = find(response, 'table').findAll('tr')
         
         return [{
             'id':           getUrlParam(data[0].find('a').get('href').replace('&amp;', '&'), 'RowID'),
