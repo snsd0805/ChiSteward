@@ -54,6 +54,9 @@ def createMoodleWin(moodle):
             obj = event.widget
             Index = obj.curselection()
             tmpId=coursesId[coursesName.index(str(obj.get(Index)))]
+            ht='''<h5>讀取中</h5>'''
+            htmlLb.set_html(ht)
+            win.update()
             Html='''<h3>本周作業</h3><ol>'''
             for work in moodle.getWeekWorkInCourse(str(tmpId)):
                 Html+='''<li> <a href={}> {}</a> </li>'''.format(work.get("link"),work.get("name") )
@@ -62,6 +65,8 @@ def createMoodleWin(moodle):
                 Html+='''<li>{}</li>'''.format(anno.get("title"))
             Html+='''</ol>'''    
             htmlLb.set_html(Html)
+            
+            
             
         coursesName=[]
         coursesListBox.insert(END,*coursesName)
