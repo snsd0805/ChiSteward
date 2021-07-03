@@ -4,8 +4,8 @@ from config import CONFIG
 from tkinter import messagebox
 from tkhtmlview import HTMLLabel
 
-def createNcnuWin():
-    ncnu = NcnuAPI(CONFIG['NCNU']['username'], CONFIG['NCNU']['password'])
+def createNcnuWin(ncnu):
+     
     if ncnu.status:
         def dlCurriculum(sem):
             if ncnu.getCourseTable(sem):
@@ -96,5 +96,3 @@ def createNcnuWin():
     
     else:
         print("NCNU 教務系統登入失敗")
-
-createNcnuWin()
