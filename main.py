@@ -1,10 +1,10 @@
 from tkinter import *
-from firstpage import *
-from MainWin import *
+from wins.firstpage import *
+from wins.MainWin import *
 from config import CONFIG
-from Ncnu import *
-from Moodle import *
-from NcnuMainWin import *
+from wins.Ncnu import *
+from wins.Moodle import *
+from wins.NcnuMainWin import *
 from api.moodle import MoodleAPI
 from api.ncnu import NcnuAPI
 import threading

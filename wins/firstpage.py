@@ -5,7 +5,7 @@ import json
 from api.moodle import MoodleAPI
 from tkinter import messagebox
 from api.ncnu import NcnuAPI
-from MainWin import *
+from wins.MainWin import *
 
 
 def firstWin(first):
